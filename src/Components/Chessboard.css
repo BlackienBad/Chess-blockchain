@@ -1,0 +1,48 @@
+#chessboard{
+    display: grid;
+    grid-template-columns: repeat(8, 75px);
+    grid-template-rows: repeat(8, 75px);
+    width: 600px;
+    height: 600px;
+    background-color: white;
+}
+
+#chessboard .tile{
+    display: grid;
+    place-content: center;
+    width: 75px;
+    height: 75px;
+}
+
+#chessboard .black-tile{
+    background-color: #779556;
+}
+
+#chessboard .red{
+    background-color:red;
+}
+
+#chessboard .white-tile{
+    background-color: #ebecd0;
+}
+
+#chessboard .tile:hover{
+    background-color:red;
+}
+
+.tile .chess-piece {
+    width: 100px;
+    height: 100px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60px;
+}
+
+
+.tile .chess-piece:hover {
+    cursor: grab;
+}
+
+.tile .chess-piece:active {
+    cursor: grabbing;
+}
