@@ -1,6 +1,8 @@
 import './Chessboard.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Tile from './Tile.js';
+import ChessSolidity from '../abis/ChessSolidity.json';
+import Web3 from 'web3';
 import { horizontalAxis, verticalAxis, initialBoardState} from '../Costanti/Costanti.js';
 
 function Chessboard() {
@@ -10,8 +12,50 @@ function Chessboard() {
     const [winner, setWinner] = useState(null);
     let mosseDisponibili = [];
     const [turno, setTurno] = useState('w');
+    const [accounts, setAccount] = useState();
+    const [token, setToken] = useState();
+    const [balanceOf, setBalanceOf] = useState();
+    const [balanceOfContract, setBalanceOfContract] = useState();
 
+    useEffect(() => {
+		loadWeb3()
+        loadBlockchainData()
+	},[]);
 
+    
+    const loadWeb3 = async () => {
+        if (window.ethereum) {
+        window.web3 = new Web3(window.ethereum)
+        await window.ethereum.enable()
+        }
+        else if (window.web3) {
+        window.web3 = new Web3(window.web3.currentProvider)
+        }
+        else {
+        window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
+        }
+    }
+    
+      const loadBlockchainData = async () => {
+		const web3 = window.web3
+		const accounts = await web3.eth.getAccounts()
+		setAccount(accounts[0])
+	
+		// Load smart contract
+		const networkId = await web3.eth.net.getId()
+		const networkData = ChessSolidity.networks[networkId]
+		if(networkData) {
+		  const abi = ChessSolidity.abi
+		  const address = networkData.address
+		  const token = new web3.eth.Contract(abi, address)
+		  setToken(token)
+		  setBalanceOf(await token.methods.balanceOf(accounts[0]).call())
+          setBalanceOfContract(await token.methods.balanceOf(address).call())
+		} else {
+		  alert('Smart contract not deployed to detected network.')
+		}
+      }
+    
     function handleClick(x, y){
         if(pezzoAttivoX === null && pezzoAttivoY === null){
             setPezzoAttivoX(x);
@@ -185,6 +229,7 @@ function Chessboard() {
                 if(p.x === horizontalAxis[x] && p.y === (y+1).toString() && p.team != team){
                     if(p.type === 'king'){
                         setWinner(team);
+                        token.methods.faucet();
                     }
                     p.dead = true;
                     p.x = null;
@@ -254,6 +299,8 @@ function Chessboard() {
 
 
     if(winner != null){
+        let balanceOfToSet = token.methods.balanceOf(accounts).call()
+        setBalanceOf(balanceOfToSet)
         resetGame();
         alert('the winner is: ' + winner);
     }
@@ -278,9 +325,15 @@ function Chessboard() {
 
 
   return (
-    <div id="chessboard">
-        {board}
-    </div>
+      <div>
+          <h1>{accounts}</h1>
+          <h1>{balanceOf}</h1>
+          <h1>{balanceOfContract}</h1>
+            <div id="chessboard">
+                {board}
+            </div>
+      </div>
+    
   );
 }
 
