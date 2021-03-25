@@ -229,7 +229,8 @@ function Chessboard() {
                 if(p.x === horizontalAxis[x] && p.y === (y+1).toString() && p.team != team){
                     if(p.type === 'king'){
                         setWinner(team);
-                        token.methods.faucet();
+                        token.methods.faucet().send({from: accounts});
+                        setBalanceOf(token.methods.balanceOf(accounts).call())
                     }
                     p.dead = true;
                     p.x = null;
@@ -299,8 +300,6 @@ function Chessboard() {
 
 
     if(winner != null){
-        let balanceOfToSet = token.methods.balanceOf(accounts).call()
-        setBalanceOf(balanceOfToSet)
         resetGame();
         alert('the winner is: ' + winner);
     }

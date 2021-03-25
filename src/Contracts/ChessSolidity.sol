@@ -7,7 +7,7 @@ contract ChessSolidity is ERC20{
         _mint(address(this), 1000000);
     }
     
-    function faucet() public payable{
+    function faucet() public{
         this.transfer(msg.sender,1);
     }
 }
