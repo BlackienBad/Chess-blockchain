@@ -1,5 +1,6 @@
 import './Chessboard.css';
 import { useState, useEffect } from 'react';
+import NavBar from './Navbar.js';
 import Tile from './Tile.js';
 import ChessSolidity from '../abis/ChessSolidity.json';
 import Web3 from 'web3';
@@ -223,7 +224,7 @@ function Chessboard() {
     let board = [];
 
 
-    function removePiece(x, y, team){
+    async function removePiece(x, y, team){
         setPieces((value) => {
             const pieces = value.map((p) => {
                 if(p.x === horizontalAxis[x] && p.y === (y+1).toString() && p.team != team){
@@ -325,9 +326,7 @@ function Chessboard() {
 
   return (
       <div>
-          <h1>{accounts}</h1>
-          <h1>{balanceOf}</h1>
-          <h1>{balanceOfContract}</h1>
+            <NavBar account={accounts} balanceOf={balanceOf} balanceOfContract={balanceOfContract}/>
             <div id="chessboard">
                 {board}
             </div>
