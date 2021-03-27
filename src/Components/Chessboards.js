@@ -1,6 +1,7 @@
 import './Chessboard.css';
 import { useState, useEffect } from 'react';
 import NavBar from './Navbar.js';
+import HDWalletProvider from '@truffle/hdwallet-provider';
 import Tile from './Tile.js';
 import ChessSolidity from '../abis/ChessSolidity.json';
 import Web3 from 'web3';
@@ -20,7 +21,9 @@ function Chessboard() {
 
     useEffect(() => {
 		loadWeb3()
-        loadBlockchainData()
+        // uncomment for localdevelopment with ganache
+        //loadBlockchainData()
+        loadRopstenData()
 	},[]);
 
     
@@ -36,6 +39,16 @@ function Chessboard() {
         window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
         }
     }
+
+    const loadRopstenData = async () => {
+		const web3 = window.web3
+		const accounts = await web3.eth.getAccounts()
+		setAccount(accounts[0])
+        const token = new web3.eth.Contract(ChessSolidity.abi, '0x1570821d1631C09943d26DcE53bd7fdB4b5A68Ee')
+        setToken(token)
+        setBalanceOf(await token.methods.balanceOf(accounts[0]).call())
+        setBalanceOfContract(await token.methods.balanceOf('0x1570821d1631C09943d26DcE53bd7fdB4b5A68Ee').call())
+      }
     
       const loadBlockchainData = async () => {
 		const web3 = window.web3
