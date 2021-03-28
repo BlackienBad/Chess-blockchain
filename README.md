@@ -1,4 +1,7 @@
-![Gif](https://giphy.com/gifs/diYJJsl2q0r3dEZnmC)<br/><br/>
+# Chess Solidity Game
+<br/>
+
+![Gif](https://media.giphy.com/media/diYJJsl2q0r3dEZnmC/source.gif)<br/><br/>
 
 Developed using:<br/>
 -[Ganache](https://www.trufflesuite.com/ganache) to simulate a local blockchain<br/>
